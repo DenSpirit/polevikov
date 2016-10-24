@@ -1,0 +1,97 @@
+\documentclass[a4paper, 12pt]{article}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{amsmath}
+\usepackage{indentfirst}
+\usepackage[top=2cm, bottom=2cm, left=3cm, right=1cm]{geometry}
+\numberwithin{equation}{section}
+
+\newcommand{\der}[2]{\frac{\partial {#1}}{\partial {#2}}}
+\newcommand{\dder}[2]{\frac{\partial^2 {#1}}{\partial {#2}^2}}
+
+\begin{document}
+  Уравнение гравитационной конвекции с несжимаемой жидкостю и отсутствием
+  источников тепла внутри жидкости:
+
+  $$
+    \left\{
+      \begin{aligned}
+        &\der{T}{t} + \der{\psi}{y} \der{T}{x} - \der{\psi}{x} \der{T}{y} =
+          a \left( \dder{T}{x} + \dder{T}{y} \right)
+        \\
+        &\dder{\psi}{x} + \dder{\psi}{y} + \omega = 0
+        \\
+        &\der{\omega}{t} + \der{\psi}{y} \der{\omega}{x} - \der{\psi}{x}
+          \der{\omega}{y} = \nu \left(
+            \dder{\omega}{x} + \dder{\omega}{y}
+          \right) + \beta g \der{T}{x}
+      \end{aligned}
+    \right.
+  $$
+
+  Безразмерная форма:
+
+  $$
+    \left\{
+      \begin{aligned}
+        &\der{\psi}{y} \der{T}{x} - \der{\psi}{x} \der{T}{y} = \frac{1}{Pr}
+          \left( \dder{T}{x} + \dder{T}{y} \right)
+        \\
+        &\dder{\psi}{x} + \dder{\psi}{y} + \omega = 0
+        \\
+        &\der{\psi}{y} \der{\omega}{x} - \der{\psi}{x} \der{\psi}{y} =
+          \dder{\omega}{x} + \dder{\omega}{y} + Gr \der{T}{x}
+      \end{aligned}
+    \right.
+  $$
+
+  где $Pr = \frac{v}{a}, \quad Gr = \frac{\beta g \Delta T l^{3}}{\nu}$
+
+  Построим монотонную разностную схему первого порядка. Для монотонности
+  разностная схема должна удовлетворить принципу максимума
+
+  Уравнение сохранения тепла:
+
+  \begin{gather*}
+    \der{\psi}{y} \der{T}{x} - \der{\psi}{x} \der{T}{y} = \frac{1}{Pr}
+      \left( \dder{T}{x} + \dder{T}{y} \right)
+    \\
+    \der{\psi}{y} \der{T}{x} = \psi_{\mathring{y}}^{+} T_{\overline{x}} +
+      \psi_{\mathring{y}}^{-} T_{x}
+    \\
+    \der{\psi}{x} \der{T}{y} = \psi_{\mathring{x}}^{+} T_{y} +
+      \psi_{\mathring{x}}^{-} T_{\overline{y}}
+  \end{gather*}
+  \begin{multline*}
+    T_{i,j}\left(
+      \frac{4}{h^2 Pr} +
+      \frac{1}{h} \psi_{\mathring{y}}^{+} +
+      \frac{1}{h} \psi_{\mathring{x}}^{+} -
+      \frac{1}{h} \psi_{\mathring{y}}^{-} -
+      \frac{1}{h} \psi_{\mathring{x}}^{-}
+    \right) = \\
+      T_{i-1,j}\left(
+        \frac{1}{Pr h^2} + \frac{1}{h} \psi_{\mathring{y}}^{+}
+      \right) +
+      T_{i,j-1}\left(
+        \frac{1}{Pr h^2} + \frac{1}{h} \psi_{\mathring{x}}^{-}
+      \right) + \\
+      T_{i+1,j}\left(
+        \frac{1}{Pr h^2} + \frac{1}{h} \psi_{\mathring{y}}^{-}
+      \right) +
+      T_{i,j+1}\left(
+        \frac{1}{Pr h^2} + \frac{1}{h} \psi_{\mathring{x}}^{+}
+      \right)
+  \end{multline*}
+
+  Закон сохранения массы:
+
+  \begin{gather*}
+    \dder{\psi}{x} + \dder{\psi}{y} + \omega = 0
+    \\
+    \frac{4}{h^2}\psi_{i,j} = \frac{1}{h^2} \left(
+      \psi_{i,j+1} + \psi_{i,j-1} + \psi_{i-1,j} + \psi_{i+1,j}
+    \right) + \omega_{i,j}
+  \end{gather*}
+\end{document}
