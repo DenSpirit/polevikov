@@ -1,0 +1,43 @@
+%        File: motion.tex
+%     Created: Пн окт 17 05:00  2016 +0
+% Last Change: Пн окт 17 05:00  2016 +0
+%
+\documentclass[a4paper]{article}
+\usepackage{amsmath}
+\newcommand{\der}[2]{\frac{\partial {#1}}{\partial {#2}}}
+\newcommand{\dder}[2]{\frac{\partial^2 {#1}}{\partial {#2}^2}}
+\newcommand{\psp}[2]{\psi_{\mathring{#1}}^{#2}}
+\newcommand{\om}[2]{\omega_{i#1}^{j#2}}
+\begin{document}
+\begin{equation}
+    \der{\psi}{y}\der{\omega}{x} - \der{\psi}{x}\der{\omega}{y}
+    = \dder{\omega}{x} + \dder{\omega}{y} + Gr \der{T}{x}
+\end{equation}
+\begin{equation}
+    (\psp{y}{+} \omega_{x} + \psp{y}{-} \omega_{\overline{x}})
+  - (\psp{x}{+} \omega_{y} + \psp{x}{-} \omega_{\overline{y}})
+  = \omega_{x\overline{x}} + \omega_{y\overline{y}} + Gr \der{T}{x}
+\end{equation}
+
+\begin{center}---------------------------------------------\end{center}
+
+\begin{equation}
+\begin{gathered}
+    \frac{1}{h}(\psp{y}{+} \om{+1}{} \underline{- \psp{y}{+} \om{}{} 
+    + \psp{y}{-} \om{}{}} - \psp{y}{-} \om{-1}{})
+    -\frac{1}{h}(\psp{x}{+} \om{}{+1} - \psp{x}{+} \om{}{} 
+    + \psp{x}{-} \om{}{} - \psp{x}{-} \om{}{-1}) \\
+    = \frac{1}{h}\left( \om{+1}{} + \om{-1}{} + \om{}{+1} + \om{}{-1} -4\om{}{} \right) + Gr \der{T}{x}
+\end{gathered}
+\end{equation}
+\begin{equation}
+\begin{gathered}
+    \om{}{} \left( \frac{4}{h^2} 
+    \underline{- \frac{1}{h}\psp{y}{+} + \frac{1}{h}\psp{y}{-}} 
+  - \psp{x}{-} + \psp{x}{+}
+    \right)<++>
+\end{gathered}
+\end{equation}
+\end{document}
+
+
