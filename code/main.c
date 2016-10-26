@@ -6,43 +6,6 @@ int NODEC;
 double EPS;
 double H;
 
-void printv(double* v,char name[]) {
-#ifdef VERBOSE
-    printf("%s:",name);
-    int i;
-    for(i=0;i<N;i++){
-        printf("%.2lf ",v[i]);
-    }
-    printf("\n");
-#endif //VERBOSE
-}
-void printd(double d,char name[]){
-#ifdef VERBOSE
-    fprintf(stderr,"%s:%.3lf\n",name,d);
-#endif //VERBOSE
-}
-void printm(double** A,char name[]){
-#ifdef VERBOSE
-    int i,j;
-    printf("%s:\n",name);
-    for(i=0;i<N;i++){
-        for(j=0;j<N;j++){
-            double o;
-                if(i==j)
-                    o=A[1][j];
-                else if(i==j-1)
-                    o=A[2][j-1];
-                else if(i==j+1)
-                    o=A[0][j+1];
-                else
-                    o=0;
-            printf("%.0lf\t",o);
-        }
-        printf("\n");
-    }
-#endif //VERBOSE
-}
-
 double** create() {
     int size = N;
     double** m = calloc(size, sizeof(double*));
@@ -74,7 +37,7 @@ double middle(double** m, int i, int j, char pm, char dir) {
     int iindex = dir == 'x' ? 1 : 0;
     int jindex = dir == 'y' ? 1 : 0;
     double f = (m[i+iindex][j+jindex]-m[i-iindex][j-jindex])/(2*H);
-    if (pm == '-' && f < 0 || pm == '+' && f > 0) {
+    if (pm == 0 || pm == '-' && f < 0 || pm == '+' && f > 0) {
         return f;
     } else {
         return 0;
@@ -87,16 +50,15 @@ double calc_psi(int i, int j, state s) {
 }
 
 double calc_omega(int i, int j, state s) {
-    double im1= 
-    double ip1= 
-    double jm1= 
-    double jp1= 
-    double ij_coeff = (4/(H*H*s.Pr) + middle(s.psi,i,j,'+','y')/H
+    double im1= s.omega[i-1][j]*(1/(H*H) + 1/H * middle(s.psi, i, j, '+', 'y'));
+    double ip1= s.omega[i+1][j]*(1/(H*H) - 1/H * middle(s.psi, i, j, '-', 'y'));
+    double jm1= s.omega[i][j-1]*(1/(H*H) - 1/H * middle(s.psi, i, j, '-', 'x'));
+    double jp1= s.omega[i][j+1]*(1/(H*H) + 1/H * middle(s.psi, i, j, '+', 'x'));
+    double ij_coeff = (4/(H*H) + middle(s.psi,i,j,'+','y')/H
                     + middle(s.psi,i,j,'+','x')/H
                     - middle(s.psi,i,j,'-','y')/H
                     - middle(s.psi,i,j,'-','x')/H);
-    return (im1+ip1+jm1+jp1)/ij_coeff;
-    return 0;
+    return (s.Gr * middle(s.T, i, j, 0, 'x') + im1+ip1+jm1+jp1)/ij_coeff;
 }
 
 double calc_T(int i, int j, state s) {
@@ -140,8 +102,8 @@ void border_T(state s) {
     for(i=0;i<N;i++) {
         s.T[i][0] = 0;
         s.T[0][i] = 0;
-        s.T[NODEC][i] = sin(M_PI*i*H);
-        s.T[i][NODEC] = 0;
+        s.T[NODEC][i] = 0;
+        s.T[i][NODEC] = sin(M_PI*i*H);
     }
 }
 
@@ -149,8 +111,10 @@ void output(double** m) {
     int i,j;
     for(i=0;i<=NODEC;i++) {
         for(j=0;j<=NODEC;j++) {
-            printf("%lf %lf %lf\n", (double) i*H, (double) j*H, m[i][j]);
+            //printf("%lf %lf %lf\n", (double) i*H, (double) j*H, m[i][j]);
+            printf("%.3lf ", m[i][j]);
         }
+        printf("\n");
     }
 }
 
@@ -158,7 +122,7 @@ void output(double** m) {
 int main(int argc, char* argv[])
 {
     //sscanf(argv[1],"%d",&NODEC);
-    NODEC = 20;
+    NODEC = 10;
     N = NODEC + 1;
     H = 1. / ((double) NODEC);
     EPS = H*H;
@@ -182,7 +146,12 @@ int main(int argc, char* argv[])
             s.T[i][j] = calc_T(i, j, s);
         }
     }
+    printf("T\n");
     output(s.T);
+    printf("psi\n");
+    output(s.psi);
+    printf("omega\n");
+    output(s.omega);
 
     drop(s.psi, N);
     drop(s.omega, N);
