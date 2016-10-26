@@ -10,6 +10,7 @@
 
 \newcommand{\der}[2]{\frac{\partial {#1}}{\partial {#2}}}
 \newcommand{\dder}[2]{\frac{\partial^2 {#1}}{\partial {#2}^2}}
+\newcommand{\psp}[2]{\psi_{\mathring{#1}}^{#2}}
 
 \begin{document}
   Уравнение гравитационной конвекции с несжимаемой жидкостю и отсутствием
@@ -58,31 +59,26 @@
     \der{\psi}{y} \der{T}{x} - \der{\psi}{x} \der{T}{y} = \frac{1}{Pr}
       \left( \dder{T}{x} + \dder{T}{y} \right)
     \\
-    \der{\psi}{y} \der{T}{x} = \psi_{\mathring{y}}^{+} T_{\overline{x}} +
-      \psi_{\mathring{y}}^{-} T_{x}
+    \der{\psi}{y} \der{T}{x} = \psp{y}{+} T_{\overline{x}} + \psp{y}{-} T_{x}
     \\
-    \der{\psi}{x} \der{T}{y} = \psi_{\mathring{x}}^{+} T_{y} +
-      \psi_{\mathring{x}}^{-} T_{\overline{y}}
+    \der{\psi}{x} \der{T}{y} = \psp{x}{+} T_{y} + \psp{x}{-} T_{\overline{y}}
   \end{gather*}
   \begin{multline*}
     T_{i,j}\left(
-      \frac{4}{h^2 Pr} +
-      \frac{1}{h} \psi_{\mathring{y}}^{+} +
-      \frac{1}{h} \psi_{\mathring{x}}^{+} -
-      \frac{1}{h} \psi_{\mathring{y}}^{-} -
-      \frac{1}{h} \psi_{\mathring{x}}^{-}
+      \frac{4}{h^2 Pr} + \frac{1}{h} \psp{y}{+} + \frac{1}{h} \psp{x}{+} -
+      \frac{1}{h} \psp{y}{-} - \frac{1}{h} \psp{x}{-}
     \right) = \\
       T_{i-1,j}\left(
-        \frac{1}{Pr h^2} + \frac{1}{h} \psi_{\mathring{y}}^{+}
+        \frac{1}{Pr h^2} + \frac{1}{h} \psp{y}{+}
       \right) +
       T_{i,j-1}\left(
-        \frac{1}{Pr h^2} + \frac{1}{h} \psi_{\mathring{x}}^{-}
+        \frac{1}{Pr h^2} + \frac{1}{h} \psp{x}{-}
       \right) + \\
       T_{i+1,j}\left(
-        \frac{1}{Pr h^2} + \frac{1}{h} \psi_{\mathring{y}}^{-}
+        \frac{1}{Pr h^2} + \frac{1}{h} \psp{y}{-}
       \right) +
       T_{i,j+1}\left(
-        \frac{1}{Pr h^2} + \frac{1}{h} \psi_{\mathring{x}}^{+}
+        \frac{1}{Pr h^2} + \frac{1}{h} \psp{x}{+}
       \right)
   \end{multline*}
 
@@ -96,6 +92,47 @@
     \right) + \omega_{i,j}
   \end{gather*}
 
+  Закон сохранения движения:
+
+  \begin{gather*}
+    \der{\psi}{y} \der{\omega}{x} - \der{\psi}{x} \der{\psi}{y} =
+      \dder{\omega}{x} + \dder{\omega}{y} + Gr \der{T}{x}
+    \\
+    \left(
+      \psp{y}{+} \omega_{\overline{x}} + \psp{y}{-} \omega_{x}
+    \right) -
+    \left(
+      \psp{x}{-} \omega_{\overline{y}} + \psp{x}{+} \omega_{y}
+    \right) =
+    \omega_{x \overline{x}} + \omega_{y \overline{y}} + Gr \der{T}{x}
+  \end{gather*}
+  \begin{multline*}
+    \frac{1}{h} \left(
+      \psp{y}{+} \omega_{i, j} - \psp{y}{+} \omega_{i-1, j} +
+      \psp{y}{-} \omega_{i+1, j} - \psp{y}{-} \omega_{i, j}
+    \right) -
+    \\
+    \frac{1}{h} \left(
+      \psp{x}{-} \omega_{i, j} - \psp{x}{-} \omega_{i, j-1} +
+      \psp{x}{+} \omega_{i, j+1} - \psp{x}{+} \omega{i, j}
+    \right) =
+    \\
+    \frac{1}{h^2} \left(
+      \omega_{i+1, j} + \omega_{i-1, j} + \omega_{i, j-1} + \omega_{i, j+1} -
+      4 \omega{i, j}
+    \right) + Gr T_{\mathring{x}}
+  \end{multline*}
+  \begin{multline*}
+    \omega_{i, j} \left(
+      \frac{4}{h} + \psp{y}{+} - \psp{y}{-} - \psp{x}{-} + \psp{x}{+}
+    \right) =
+    \\
+    \omega_{i+1, j} \left( \frac{1}{h} - \psp{y}{-} \right) +
+    \omega_{i-1, j} \left( \frac{1}{h} + \psp{y}{+} \right) +
+    \omega_{i, j-1} \left( \frac{1}{h} - \psp{x}{-} \right) +
+    \omega_{i, j+1} \left( \frac{1}{h} + \psp{x}{+} \right) +
+    Gr T_{\mathring{x}}
+  \end{multline*}
 
 \begin{tikzpicture}
 \begin{axis}
