@@ -1,4 +1,4 @@
-CFLAGS=-g -lm
+CFLAGS=-g -lm -O3
 main: main.c
 	$(CC) $(CFLAGS) main.c -o main
 v: main.c

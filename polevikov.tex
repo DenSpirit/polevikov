@@ -1,4 +1,5 @@
 \documentclass[a4paper, 12pt]{article}
+\usepackage{pgfplots}
 \usepackage[T2A]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[russian]{babel}
@@ -94,4 +95,22 @@
       \psi_{i,j+1} + \psi_{i,j-1} + \psi_{i-1,j} + \psi_{i+1,j}
     \right) + \omega_{i,j}
   \end{gather*}
+
+
+\begin{tikzpicture}
+\begin{axis}
+\addplot3[
+contour gnuplot={
+output point meta=rawz,
+},
+z filter/.code={\def\pgfmathresult{1}},
+]
+coordinates {
+(0,0,0) (1,0,0) (2,0,0) (3,0,0)
+(0,1,0) (1,1,0.6) (2,1,0.7) (3,1,0.5)
+(0,2,0) (1,2,0.7) (2,2,0.8) (3,2,0.5)
+};
+\end{axis}%
+\end{axis}
+\end{tikzpicture}
 \end{document}

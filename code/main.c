@@ -133,15 +133,61 @@ double border_T(state s) {
     return 0;
 }
 
+typedef struct outs outs;
+struct outs {
+    double x;
+    double y;
+    double z;
+};
+int dcomp(const double a, const double b) {
+    if (fabs(a - b) < 0.000001) {
+        return 0;
+    } else if (a > b) {
+        return 1;
+    } else {
+        return -1;
+    }
+}
+int outcompare(const void* av, const void* bv) {
+    outs* a = (outs*) av;
+    outs* b = (outs*) bv;
+    int r;
+    r = dcomp(a->z, b->z);
+    if(!r) {
+        r = dcomp(a->x, b->x);
+    }
+    if(!r) {
+        r = dcomp(a->y, b->y);
+    }
+    return r;
+}
 void output(const double** m) {
-    int i,j;
+    int i,j,k;
+    k=0;
+    outs* o = calloc(N*N, sizeof(outs));
     for(i=0;i<=NODEC;i++) {
         for(j=0;j<=NODEC;j++) {
             //printf("%lf %lf %lf\n", (double) i*H, (double) j*H, m[i][j]);
-            printf("%.3lf ", m[j][i]);
+            //printf("%.3lf ", m[j][i]);
+            o[k].x = i*H;
+            o[k].y = j*H;
+            o[k++].z = m[i][j];
+            printf("{%.2lf,%.2lf,%.2lf},", i*H, j*H, m[i][j]);
         }
-        printf("\n");
+        //printf("\n");
     }
+    /*for(i=0;i<k;i++) {
+        printf("(%.3lf,%.3lf,%.3lf)\n", o[k].x, o[k].y, o[k].z);
+    }*/
+//    qsort(o, N*N, sizeof(outs), outcompare);
+/*    for(i=0;i<k;i++) {
+        outs oo = o[i];
+        printf("(%.2lf,%.2lf,%.2lf)", oo.x, oo.y, oo.z);
+        if (i>0 && fabs(oo.z - o[i-1].z) > EPS) {
+            printf("\n");
+        }
+    }*/
+    free(o);
 }
 
 double cycle(state s) {
@@ -156,13 +202,13 @@ double cycle(state s) {
     int j;
     for(i=1;i<NODEC;i++) {
         for(j=1;j<NODEC;j++) {
-            double psi = calc_psi(i, j, s);
-            diff_psi += fabs(psi - s.psi[i][j]);
-            s.psi[i][j] = psi;
-
             double omega = calc_omega(i, j, s);
             diff_omega += fabs(omega - s.omega[i][j]);
             s.omega[i][j] = omega;
+
+            double psi = calc_psi(i, j, s);
+            diff_psi += fabs(psi - s.psi[i][j]);
+            s.psi[i][j] = psi;
 
             double T = calc_T(i, j, s);
             diff_T += fabs(T - s.T[i][j]);
@@ -186,7 +232,7 @@ state init(double Gr, double Pr) {
 
 int main(int argc, char* argv[])
 {
-    NODEC = 10;
+    NODEC = 20;
     N = NODEC + 1;
     H = 1. / ((double) NODEC);
     EPS = H*H;
@@ -205,12 +251,14 @@ int main(int argc, char* argv[])
 #endif
     }
 #ifdef VERBOSE
-    printf("T\n");
-    output((const double**) s.T);
+//    printf("T\n");
+//    output((const double**) s.T);
     printf("Psi\n");
-    output((const double**) s.psi);
-    printf("Omega\n");
+    //output((const double**) s.psi);
+    //output((const double**) s.T);
     output((const double**) s.omega);
+//    printf("Omega\n");
+//    output((const double**) s.omega);
 #endif
 
     drop(s.psi, N);
