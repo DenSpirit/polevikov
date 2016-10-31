@@ -26,14 +26,6 @@ void drop(double** m, int size) {
 
 typedef struct state state;
 struct state {
-    /* minimum diff when we stop */
-    double EPS;
-    /* step value */
-    double H;
-    /* node count */
-    double NODEC;
-    /* NODEC+1, arrays length */
-    double N;
     /* Grasgoph/Prandtl and arrays */
     double Gr;
     double Pr;
@@ -221,15 +213,6 @@ double cycle(state s) {
     return diff_psi + diff_omega + diff_T;
 }
 
-state init(double Gr, double Pr) {
-    state s = {.Gr = Gr, 
-               .Pr = Pr,
-               .psi = create(),
-               .omega = create(),
-               .T = create()};
-    return s;
-}
-
 int main(int argc, char* argv[])
 {
     NODEC = 20;
@@ -251,14 +234,12 @@ int main(int argc, char* argv[])
 #endif
     }
 #ifdef VERBOSE
-//    printf("T\n");
-//    output((const double**) s.T);
+    printf("T\n");
+    output((const double**) s.T);
     printf("Psi\n");
-    //output((const double**) s.psi);
-    //output((const double**) s.T);
+    output((const double**) s.psi);
+    printf("Omega\n");
     output((const double**) s.omega);
-//    printf("Omega\n");
-//    output((const double**) s.omega);
 #endif
 
     drop(s.psi, N);
