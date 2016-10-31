@@ -131,54 +131,23 @@ struct outs {
     double y;
     double z;
 };
-int dcomp(const double a, const double b) {
-    if (fabs(a - b) < 0.000001) {
-        return 0;
-    } else if (a > b) {
-        return 1;
-    } else {
-        return -1;
-    }
-}
-int outcompare(const void* av, const void* bv) {
-    outs* a = (outs*) av;
-    outs* b = (outs*) bv;
-    int r;
-    r = dcomp(a->z, b->z);
-    if(!r) {
-        r = dcomp(a->x, b->x);
-    }
-    if(!r) {
-        r = dcomp(a->y, b->y);
-    }
-    return r;
-}
 void output(const double** m) {
     int i,j,k;
     k=0;
     outs* o = calloc(N*N, sizeof(outs));
+    printf("{");
     for(i=0;i<=NODEC;i++) {
         for(j=0;j<=NODEC;j++) {
-            //printf("%lf %lf %lf\n", (double) i*H, (double) j*H, m[i][j]);
-            //printf("%.3lf ", m[j][i]);
             o[k].x = i*H;
             o[k].y = j*H;
             o[k++].z = m[i][j];
-            printf("{%.2lf,%.2lf,%.2lf},", i*H, j*H, m[i][j]);
+            printf("{%.2lf,%.2lf,%lf}", i*H, j*H, m[i][j]);
+            if(j!=NODEC){
+                printf(",");
+            }
         }
-        //printf("\n");
     }
-    /*for(i=0;i<k;i++) {
-        printf("(%.3lf,%.3lf,%.3lf)\n", o[k].x, o[k].y, o[k].z);
-    }*/
-//    qsort(o, N*N, sizeof(outs), outcompare);
-/*    for(i=0;i<k;i++) {
-        outs oo = o[i];
-        printf("(%.2lf,%.2lf,%.2lf)", oo.x, oo.y, oo.z);
-        if (i>0 && fabs(oo.z - o[i-1].z) > EPS) {
-            printf("\n");
-        }
-    }*/
+    printf("}\n");
     free(o);
 }
 
@@ -186,9 +155,9 @@ double cycle(state s) {
     double diff_psi;
     double diff_T;
     double diff_omega;
+    diff_omega = border_omega(s);
     diff_psi = border_psi(s);
     diff_T = border_T(s);
-    diff_omega = border_omega(s);
 
     int i;
     int j;
