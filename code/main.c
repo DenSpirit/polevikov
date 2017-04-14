@@ -46,9 +46,6 @@ double middle(double** m, int i, int j, char pm, char dir) {
 }
 
 double calc_psi(int i, int j, state s) {
-    if(i==1 || j == 1 || i == NODEC-1 || j == NODEC-1) {
-        return 0;
-    }
     return (H*H * s.omega[i][j] + s.psi[i-1][j] 
                                 + s.psi[i+1][j] 
                                 + s.psi[i][j-1] 
@@ -184,7 +181,7 @@ double cycle(state s) {
 
 int main(int argc, char* argv[])
 {
-    NODEC = 20;
+    NODEC = 10;
     N = NODEC + 1;
     H = 1. / ((double) NODEC);
     EPS = H*H;
@@ -209,6 +206,7 @@ int main(int argc, char* argv[])
     output((const double**) s.psi);
     printf("Omega\n");
     output((const double**) s.omega);
+    printf("psi diff: %lf\n", s.psi[1][3]);
 #endif
 
     drop(s.psi, N);
