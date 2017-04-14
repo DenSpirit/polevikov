@@ -132,17 +132,19 @@ void output(const double** m) {
     int i,j,k;
     k=0;
     outs* o = calloc(N*N, sizeof(outs));
-    printf("{");
+    //printf("{");
     for(i=0;i<=NODEC;i++) {
         for(j=0;j<=NODEC;j++) {
             o[k].x = i*H;
             o[k].y = j*H;
             o[k++].z = m[i][j];
-            printf("{%.2lf,%.2lf,%lf}", i*H, j*H, m[i][j]);
-            if(j!=NODEC){
+            //printf("{%.2lf,%.2lf,%lf}", i*H, j*H, m[i][j]);
+            printf("%lf ", m[i][j]);
+            /*if(j!=NODEC){
                 printf(",");
-            }
+            }*/
         }
+        printf("\n");
     }
     printf("}\n");
     free(o);
